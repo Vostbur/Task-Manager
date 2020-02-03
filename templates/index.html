@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+    <title>Менеджер проектов</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="{{ url_for('static', filename='css/ie10-viewport-bug-workaround.css') }}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/navbar-fixed-top.css') }}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Page contents -->
+        <div class="jumbotron">
+            <h2>1 отделение</h2>
+
+            <!-- Task input form -->
+            <form class="navbar-form navbar-left" role="search" action="/add" method="POST">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon container-fluid">Проект</span>
+                        <input type="text" name="project" class="form-control" {% for project in projects %}{% if project[0] == active %}value="{{ project[1] }}"{% endif %}{% endfor %} placeholder="Название проекта">
+                        <span class="input-group-addon container-fluid">Задача</span>
+                        <input type="text" name="task" class="form-control" placeholder="Новая задача" required>
+                        <span class="input-group-addon container-fluid">Статус</span>
+                        <select id="status" name="status" class="form-control">
+                            <option value=1 selected>В работе</option>
+                            <option value=0>Выполнено</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <span class="spacer">&nbsp;</span>
+                        <button type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить
+                        </button>
+                        <button type="reset" class="btn btn-default">
+                            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Сброс
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div><!-- jumbotron -->
+
+        {% if tasks %}
+        <div class="tasks">
+            {% if projects %}
+            <span id="taksNav" class="container">
+                <ul class="nav nav-tabs">
+                    {% for tab in projects %}
+                    {% if tab[0] == active %}
+                    <li role="presentation" class="active">
+                    {% else %}
+                    <li role="presentation">
+                    {% endif %}
+                        <a href="/project/{{ tab[1] }}">{{ tab[1] }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </span>
+            {% endif %}
+            <div id="taskPanel" class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">&nbsp;
+                        <span class="navbar-right">
+                            <a href="/clear/{{ active }}">
+                                <span class="glyphicon glyphicon-trash" aria-label="Remove All"></span>
+                            </a>
+                            <span class="spacer">&nbsp;</span>
+                        </span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+
+                    <!-- Task table -->
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <td style="width:100%">ОПИСАНИЕ</td>
+                            <td align="center">ДАТА</td>
+                            <td>СТАТУС</td>
+                            <td align="center">
+                                <a href="/remove/{{ active }}">
+                                    <span class="glyphicon glyphicon-remove" aria-label="Delete"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for task in tasks %}
+                        {% if task[1] == active %}
+                            {% if task[4] %}
+                        <tr class="success">
+                            <td>{{ task[2] }}</td>
+                            <td align="center">{{ task[3] }}</td>
+                            {% else %}
+                        <tr class="active">
+                            <td><strike>{{ task[2] }}</strike></td>
+                            <td align="center"><strike>{{ task[3] }}</strike></td>
+                            {% endif %}                       
+                            <td align="center">
+                                <a href="/close/{{ task[0] }}">
+                                {% if task[4] %}
+                                    <span class="glyphicon glyphicon-ok-circle" aria-label="Open"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-ok-sign" aria-label="Close"></span>
+                                {% endif %}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/delete/{{ task[0] }}">
+                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div><!-- panel body -->
+            </div><!-- panel -->
+        </div><!-- tasks -->
+        {% endif %}
+    </div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{{ url_for('static', filename='js/jquery-1.12.4.min.js') }}"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{{ url_for('static', filename='js/ie10-viewport-bug-workaround.js') }}"></script>
+</body>
+</html>
