@@ -3,6 +3,7 @@
 @author: Рубцов
 for PEP8 check use: python -m pycodestyle app.py
 """
+
 from datetime import datetime as dt
 from flask import Flask
 from flask import request
@@ -25,11 +26,11 @@ def index():
 
     if projects:
         for project in projects:
-            if project[2]:
-                active = project[0]
+            if project.active:
+                active = project.project_id
         if not active:
-            active = projects[0][0]
-            db.update_active_project(projects[0][0], 1)
+            active = projects[0].project_id
+            db.update_active_project(projects[0].project_id, 1)
     else:
         projects = None
 
@@ -56,7 +57,7 @@ def add_task():
     projects = db.get_projects()
 
     for proj in projects:
-        if proj[1] == project:
+        if proj.name == project:
             found = True
             break
 
@@ -65,11 +66,11 @@ def add_task():
         projects = db.get_projects()
 
     for proj in projects:
-        if proj[1] == project:
-            project_id = proj[0]
-            db.update_active_project(proj[0], 1)
+        if proj.name == project:
+            project_id = proj.project_id
+            db.update_active_project(proj.project_id, 1)
         else:
-            db.update_active_project(proj[0], 0)
+            db.update_active_project(proj.project_id, 0)
 
     status = 1 if bool(int(request.form['status'])) else 0
 
@@ -86,7 +87,7 @@ def close_task(task_id):
     if not task:
         return redirect('/')
 
-    if task[4]:
+    if task.status:
         db.set_task_status(task_id, 0)
     else:
         db.set_task_status(task_id, 1)
@@ -127,13 +128,14 @@ def tab_nav(tab):
     projects = db.get_projects()
 
     for project in projects:
-        if project[1] == tab:
-            db.update_active_project(project[0], 1)
+        if project.name == tab:
+            db.update_active_project(project.project_id, 1)
         else:
-            db.update_active_project(project[0], 0)
+            db.update_active_project(project.project_id, 0)
 
     return redirect('/')
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(debug=True)
+
