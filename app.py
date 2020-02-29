@@ -4,12 +4,16 @@
 for PEP8 check use: python -m pycodestyle app.py
 """
 
+import hashlib
 from datetime import datetime as dt
-from flask import Flask, request, Response, abort, redirect
+
+from flask import Flask, request, Response, redirect
 from flask import render_template
-from flask_login import LoginManager, login_required, UserMixin
+from flask_login import LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
+
 import db_utils as d
+from user_lib import User, UsersRepository
 
 DEBUG = True
 
@@ -21,47 +25,6 @@ login_manager.init_app(app)
 
 db = d.DataBase()
 db.create_schema()
-
-
-class User(UserMixin):
-
-    def __init__(self, username, password, user_id, active=True):
-        self.id = user_id
-        self.username = username
-        self.password = password
-        self.active = active
-
-    def get_id(self):
-        return self.id
-
-    def is_active(self):
-        return self.active
-
-    def get_auth_token(self):
-        return self.make_secure_token(self.username, key='secret_key')
-
-
-class UsersRepository:
-
-    def __init__(self):
-        self.users = dict()
-        self.users_id_dict = dict()
-        self.identifier = 0
-
-    def save_user(self, user):
-        self.users_id_dict.setdefault(user.id, user)
-        self.users.setdefault(user.username, user)
-
-    def get_user(self, username):
-        return self.users.get(username)
-
-    def get_user_by_id(self, userid):
-        return self.users_id_dict.get(userid)
-
-    def next_index(self):
-        self.identifier += 1
-        return self.identifier
-
 
 users_repository = UsersRepository()
 
@@ -200,34 +163,32 @@ def tab_nav(tab):
 def login():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = hashlib.sha512(request.form['password'].encode('utf-8')).hexdigest()
         registered_user = users_repository.get_user(username)
-        if registered_user is not None and registered_user.password == password:
+        if registered_user is not None \
+                and registered_user.password == password:
             print('Logged in..')
             login_user(registered_user)
     return redirect('/')
-    #         return redirect('/')
-    #     else:
-    #         return abort(401)
-    # else:
-    #     return redirect('/')
+
 
 @app.route('/logout', methods=['POST'])
 def logout():
     logout_user()
     return redirect('/')
 
+
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']
+        password = hashlib.sha512(request.form['password'].encode('utf-8')).hexdigest()
         new_user = User(username, password, users_repository.next_index())
         users_repository.save_user(new_user)
         return Response(
-                '''<p>Пользователь зарегистрирован</p>
+            '''<p>Пользователь зарегистрирован</p>
                 <br /><a href="/">Вернуться</a>'''
-                )
+        )
     else:
         return Response('''
             <form action="" method="post">

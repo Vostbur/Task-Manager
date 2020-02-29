@@ -16,4 +16,10 @@ create table task (
     status  integer default 0
 );
 
--- insert into tasks values (0, "Задача", "Дата", "Теги", "Выполнение");
+-- Пользователи
+--create table customer (
+--    id          integer primary key not null,
+--    username    text unique not NULL,
+--    password    text not NULL,
+--    active      integer
+--)
