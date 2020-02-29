@@ -1,116 +1,172 @@
 {% extends "base.html" %}
-{% block content %}
 
-    <div class="jumbotron">
-        <h2>1 отделение</h2>
-
-        <!-- Task input form -->
-        <form id="remember" class="navbar-form navbar-left" role="search" action="/add" method="POST"
-              onsubmit="return user_validate()">
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-group-addon container-fluid">Проект</span>
-                    <input type="text" name="project" class="form-control" {% for project in projects %}{% if project.project_id == active %}value="{{ project.name }}"{% endif %}{% endfor %} placeholder="Название проекта">
-                    <span class="input-group-addon container-fluid">Задача</span>
-                    <input type="text" name="task" class="form-control" placeholder="Новая задача" required>
-                    <span class="input-group-addon container-fluid">Статус</span>
-                    <select id="status" name="status" class="form-control">
-                        <option value=1 selected>В работе</option>
-                        <option value=0>Выполнено</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <span class="spacer">&nbsp;</span>
-                    <button type="submit" class="btn btn-default">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить
-                    </button>
-                    <button type="reset" class="btn btn-default">
-                        <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Сброс
-                    </button>
-                </div>
+{% block navigate %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
             </div>
-        </form>
-    </div><!-- jumbotron -->
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <!-- <li class="active"><a href="/login">Вход</a></li> -->
+                    <!-- <li class="dropdown"> -->
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Меню <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/register">Регистрация пользователей</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">Документация</li>
+                            <li><a href="#">REST API</a></li>
+                            <li><a href="#">О программе</a></li>
 
-    {% if tasks %}
-    <div class="tasks">
-        {% if projects %}
-        <span id="taksNav" class="container">
-            <ul class="nav nav-tabs">
-                {% for tab in projects %}
-                {% if tab.project_id == active %}
-                <li role="presentation" class="active">
-                {% else %}
-                <li role="presentation">
+                        </ul>
+                    </li>
+                </ul>
+                {% if not user  %}
+                <form id="signin" class="navbar-form navbar-right" role="form" action="/login" method="POST">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input id="username" type="text" class="form-control" name="username" value="" placeholder="Пользователь">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input id="password" type="password" class="form-control" name="password" value="" placeholder="Пароль">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Войти</button>
+                </form>
                 {% endif %}
-                    <a href="/project/{{ tab.name }}">{{ tab.name }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-        </span>
-        {% endif %}
-        <div id="taskPanel" class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">&nbsp;
-                    <span class="navbar-right">
-                        <a href="/clear/{{ active }}" onclick="return user_validate()">
-                            <span class="glyphicon glyphicon-trash" aria-label="Remove All"></span>
-                        </a>
+                {% if user  %}
+                <form id="signin" class="navbar-form navbar-right" role="form" action="/logout" method="POST">
+                    <button type="submit" class="btn btn-primary">Выйти</button>
+                </form>
+                <span class="navbar-brand navbar-right">Пользователь: {{ user }}</span>
+                {% endif %}
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+{% endblock %}
+
+{% block container %}
+    <div class="container">
+        <div class="jumbotron">
+            <h2>1 отделение</h2>
+
+            <!-- Task input form -->
+            <form id="remember" class="navbar-form navbar-left" role="search" action="/add" method="POST"
+                  onsubmit="return user_validate()">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon container-fluid">Проект</span>
+                        <input type="text" name="project" class="form-control" {% for project in projects %}{% if project.project_id == active %}value="{{ project.name }}"{% endif %}{% endfor %} placeholder="Название проекта">
+                        <span class="input-group-addon container-fluid">Задача</span>
+                        <input type="text" name="task" class="form-control" placeholder="Новая задача" required>
+                        <span class="input-group-addon container-fluid">Статус</span>
+                        <select id="status" name="status" class="form-control">
+                            <option value=1 selected>В работе</option>
+                            <option value=0>Выполнено</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
                         <span class="spacer">&nbsp;</span>
-                    </span>
-                </h3>
-            </div>
-            <div class="panel-body">
+                        <button type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Добавить
+                        </button>
+                        <button type="reset" class="btn btn-default">
+                            <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Сброс
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div><!-- jumbotron -->
 
-                <!-- Task table -->
-                <table class="table table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <td style="width:100%">ОПИСАНИЕ</td>
-                        <td align="center">ДАТА</td>
-                        <td>СТАТУС</td>
-                        <td align="center">
-                            <a href="/remove/{{ active }}" onclick="return user_validate()">
-                                <span class="glyphicon glyphicon-remove" aria-label="Delete"></span>
-                            </a>
-                        </td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for task in tasks %}
-                    {% if task.project == active %}
-                        {% if task.status %}
-                    <tr class="success">
-                        <td>{{ task.name }}</td>
-                        <td align="center">{{ task.date }}</td>
-                        {% else %}
-                    <tr class="active">
-                        <td><strike>{{ task.name }}</strike></td>
-                        <td align="center"><strike>{{ task.date }}</strike></td>
-                        {% endif %}
-                        <td align="center">
-                            <a href="/close/{{ task.task_id }}" onclick="return user_validate()">
-                            {% if task.status %}
-                                <span class="glyphicon glyphicon-ok-circle" aria-label="Open"></span>
-                            {% else %}
-                                <span class="glyphicon glyphicon-ok-sign" aria-label="Close"></span>
-                            {% endif %}
-                            </a>
-                        </td>
-                        <td>
-                            <a href="/delete/{{ task.task_id }}" onclick="return user_validate()">
-                                <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-                            </a>
-                        </td>
-                    </tr>
+        {% if tasks %}
+        <div class="tasks">
+            {% if projects %}
+            <span id="taksNav" class="container">
+                <ul class="nav nav-tabs">
+                    {% for tab in projects %}
+                    {% if tab.project_id == active %}
+                    <li role="presentation" class="active">
+                    {% else %}
+                    <li role="presentation">
                     {% endif %}
+                        <a href="/project/{{ tab.name }}">{{ tab.name }}</a>
+                    </li>
                     {% endfor %}
-                    </tbody>
-                </table>
-            </div><!-- panel body -->
-        </div><!-- panel -->
-    </div><!-- tasks -->
-    {% endif %}
+                </ul>
+            </span>
+            {% endif %}
+            <div id="taskPanel" class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">&nbsp;
+                        <span class="navbar-right">
+                            <a href="/clear/{{ active }}" onclick="return user_validate()">
+                                <span class="glyphicon glyphicon-trash" aria-label="Remove All"></span>
+                            </a>
+                            <span class="spacer">&nbsp;</span>
+                        </span>
+                    </h3>
+                </div>
+                <div class="panel-body">
 
+                    <!-- Task table -->
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <td style="width:100%">ОПИСАНИЕ</td>
+                            <td align="center">ДАТА</td>
+                            <td>СТАТУС</td>
+                            <td align="center">
+                                <a href="/remove/{{ active }}" onclick="return user_validate()">
+                                    <span class="glyphicon glyphicon-remove" aria-label="Delete"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for task in tasks %}
+                        {% if task.project == active %}
+                            {% if task.status %}
+                        <tr class="success">
+                            <td>{{ task.name }}</td>
+                            <td align="center">{{ task.date }}</td>
+                            {% else %}
+                        <tr class="active">
+                            <td><strike>{{ task.name }}</strike></td>
+                            <td align="center"><strike>{{ task.date }}</strike></td>
+                            {% endif %}
+                            <td align="center">
+                                <a href="/close/{{ task.task_id }}" onclick="return user_validate()">
+                                {% if task.status %}
+                                    <span class="glyphicon glyphicon-ok-circle" aria-label="Open"></span>
+                                {% else %}
+                                    <span class="glyphicon glyphicon-ok-sign" aria-label="Close"></span>
+                                {% endif %}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/delete/{{ task.task_id }}" onclick="return user_validate()">
+                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div><!-- panel body -->
+            </div><!-- panel -->
+        </div><!-- tasks -->
+        {% endif %}
+    </div>
 {% endblock %}
 

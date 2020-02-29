@@ -178,25 +178,16 @@ def logout():
     return redirect('/')
 
 
-@app.route('/register/', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = hashlib.sha512(request.form['password'].encode('utf-8')).hexdigest()
-        new_user = User(username, password, users_repository.next_index())
-        users_repository.save_user(new_user)
-        return Response(
-            '''<p>Пользователь зарегистрирован</p>
-                <br /><a href="/">Вернуться</a>'''
-        )
-    else:
-        return Response('''
-            <form action="" method="post">
-            <p><input type=text name=username placeholder="Enter username">
-            <p><input type=password name=password placeholder="Enter password">
-            <p><input type=submit value=Login>
-            </form>
-        ''')
+    if request.method == 'GET':
+        return render_template('register.html')
+
+    username = request.form['username']
+    password = hashlib.sha512(request.form['password'].encode('utf-8')).hexdigest()
+    new_user = User(username, password, users_repository.next_index())
+    users_repository.save_user(new_user)
+    return redirect('/')
 
 
 # handle login failed
