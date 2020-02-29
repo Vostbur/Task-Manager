@@ -40,7 +40,7 @@ class DataBase:
         projects = []
         for row in self.conn.execute("select * from project"):
             projects.append(self.Project(project_id=row[0], name=row[1],
-                                    active=row[2]))
+                                         active=row[2]))
         return projects
 
     def get_tasks(self):
@@ -48,15 +48,15 @@ class DataBase:
         tasks = []
         for row in self.conn.execute("select * from task"):
             tasks.append(self.Task(task_id=row[0], project=row[1], name=row[2],
-                              date=row[3], status=row[4]))
+                                   date=row[3], status=row[4]))
         return tasks
 
     def get_task_by_id(self, task_id):
         """Get task by ID """
         row = list(self.conn.execute("select * from task where id=?;",
-                                    (task_id,)))[0]
+                                     (task_id,)))[0]
         return self.Task(task_id=row[0], project=row[1], name=row[2],
-                           date=row[3], status=row[4])
+                         date=row[3], status=row[4])
 
     def set_task_status(self, task_id, status):
         """Set task status """
@@ -105,4 +105,3 @@ class DataBase:
             return
         with self.conn, open(self.db_schema_filename) as fname:
             self.conn.executescript(fname.read())
-

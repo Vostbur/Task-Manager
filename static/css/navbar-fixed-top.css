@@ -6,3 +6,8 @@ body {
   padding-top: 12px;
   padding-bottom: 72px;
 }
+.form form {
+  width: 300px;
+  margin: 0 auto;
+  padding-top: 20px;
+}

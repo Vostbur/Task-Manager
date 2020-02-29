@@ -8,8 +8,10 @@ from datetime import datetime as dt
 from flask import Flask, request, Response, abort, redirect
 from flask import render_template
 from flask_login import LoginManager, login_required, UserMixin
-from flask_login import login_user, current_user
+from flask_login import login_user, logout_user, current_user
 import db_utils as d
+
+DEBUG = True
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_key'
@@ -23,8 +25,8 @@ db.create_schema()
 
 class User(UserMixin):
 
-    def __init__(self, username, password, id, active=True):
-        self.id = id
+    def __init__(self, username, password, user_id, active=True):
+        self.id = user_id
         self.username = username
         self.password = password
         self.active = active
@@ -84,7 +86,7 @@ def index():
     try:
         user = current_user.username
     except AttributeError:
-        user = "Не зарегистрирован"
+        user = False
 
     if projects:
         return render_template('index.html', tasks=tasks, projects=projects,
@@ -194,27 +196,26 @@ def tab_nav(tab):
     return redirect('/')
 
 
-@app.route('/login/', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        registeredUser = users_repository.get_user(username)
-        if registeredUser is not None and registeredUser.password == password:
+        registered_user = users_repository.get_user(username)
+        if registered_user is not None and registered_user.password == password:
             print('Logged in..')
-            login_user(registeredUser)
-            return redirect('/')
-        else:
-            return abort(401)
-    else:
-        return Response('''
-            <form action="" method="post">
-                <p><input type=text name=username>
-                <p><input type=password name=password>
-                <p><input type=submit value=Login>
-            </form>
-        ''')
+            login_user(registered_user)
+    return redirect('/')
+    #         return redirect('/')
+    #     else:
+    #         return abort(401)
+    # else:
+    #     return redirect('/')
 
+@app.route('/logout', methods=['POST'])
+def logout():
+    logout_user()
+    return redirect('/')
 
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
@@ -249,5 +250,8 @@ def load_user(userid):
     return users_repository.get_user_by_id(userid)
 
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+if __name__ == '__main__':
+    if DEBUG:
+        app.run(host='127.0.0.1', debug=True)
+    else:
+        app.run(host='0.0.0.0', debug=False)
