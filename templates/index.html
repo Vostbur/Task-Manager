@@ -5,7 +5,8 @@
         <h2>1 отделение</h2>
 
         <!-- Task input form -->
-        <form class="navbar-form navbar-left" role="search" action="/add" method="POST">
+        <form id="remember" class="navbar-form navbar-left" role="search" action="/add" method="POST"
+              onsubmit="return user_validate()">
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon container-fluid">Проект</span>
@@ -52,7 +53,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">&nbsp;
                     <span class="navbar-right">
-                        <a href="/clear/{{ active }}">
+                        <a href="/clear/{{ active }}" onclick="return user_validate()">
                             <span class="glyphicon glyphicon-trash" aria-label="Remove All"></span>
                         </a>
                         <span class="spacer">&nbsp;</span>
@@ -69,7 +70,7 @@
                         <td align="center">ДАТА</td>
                         <td>СТАТУС</td>
                         <td align="center">
-                            <a href="/remove/{{ active }}">
+                            <a href="/remove/{{ active }}" onclick="return user_validate()">
                                 <span class="glyphicon glyphicon-remove" aria-label="Delete"></span>
                             </a>
                         </td>
@@ -88,7 +89,7 @@
                         <td align="center"><strike>{{ task.date }}</strike></td>
                         {% endif %}
                         <td align="center">
-                            <a href="/close/{{ task.task_id }}">
+                            <a href="/close/{{ task.task_id }}" onclick="return user_validate()">
                             {% if task.status %}
                                 <span class="glyphicon glyphicon-ok-circle" aria-label="Open"></span>
                             {% else %}
@@ -97,7 +98,7 @@
                             </a>
                         </td>
                         <td>
-                            <a href="/delete/{{ task.task_id }}">
+                            <a href="/delete/{{ task.task_id }}" onclick="return user_validate()">
                                 <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
                             </a>
                         </td>
