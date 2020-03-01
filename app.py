@@ -20,7 +20,7 @@ from user_lib import User, UsersRepository
 DEBUG = True
 
 # Настройка логгирования
-app_logger = log_lib.get_logger()
+app_logger = log_lib.get_logger('app.log')
 app_logger.debug('Start logging')
 
 # Настрока flask приложения

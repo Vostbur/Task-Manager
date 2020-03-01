@@ -2,7 +2,7 @@ import sys
 import logging
 import logging.handlers
 
-LOG_FILENAME = 'logging.log'
+
 LEVELS = {
     'debug': logging.DEBUG,
     'info': logging.INFO,
@@ -17,11 +17,11 @@ if len(sys.argv) > 1:
     level = LEVELS.get(level_name, logging.NOTSET)
 
 
-def get_logger():
-    app_logger = logging.getLogger(__name__)
+def get_logger(log_filename):
+    app_logger = logging.getLogger(log_filename)
     app_logger.setLevel(level)
     handler = logging.handlers.RotatingFileHandler(
-        LOG_FILENAME,
+        log_filename,
         backupCount=10,
         maxBytes=1048576
     )
