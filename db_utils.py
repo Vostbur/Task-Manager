@@ -74,6 +74,7 @@ class DataBase:
         """Delete task """
         with self.conn:
             self.conn.execute("delete from task where id=?;", (task_id,))
+        app_logger.debug(f'Delete task - {task_id}')
 
     def delete_tasks_in_project(self, project_id):
         """Filter and delete task """
