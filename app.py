@@ -4,6 +4,7 @@
 for PEP8 check use: python -m pycodestyle app.py
 """
 
+import sys
 import hashlib
 from datetime import datetime as dt
 
@@ -13,20 +14,31 @@ from flask_login import LoginManager, login_required
 from flask_login import login_user, logout_user, current_user
 
 import db_utils as d
+import log_lib
 from user_lib import User, UsersRepository
 
 DEBUG = True
 
+# Настройка логгирования
+app_logger = log_lib.get_logger()
+app_logger.debug('Start logging')
+
+# Настрока flask приложения
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_key'
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
+app_logger.debug('Create flask application')
 
+# Настройка базы данных проектов и задач
 db = d.DataBase()
 db.create_schema()
+app_logger.debug('Connect to Data Base')
 
+# Настройка авторизации
 users_repository = UsersRepository()
+app_logger.debug('Load list of authorized users')
 
 
 @app.route('/')
@@ -203,6 +215,9 @@ def load_user(userid):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        print('For change logging level start with command line argument '
+              '[debug|info|warning|error|critical]')
     if DEBUG:
         app.run(host='127.0.0.1', debug=True)
     else:
