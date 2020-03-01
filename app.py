@@ -17,7 +17,7 @@ import db_utils as d
 import log_lib
 from user_lib import User, UsersRepository
 
-DEBUG = True
+DEBUG = False
 
 # Настройка логгирования
 app_logger = log_lib.get_logger('app.log')
