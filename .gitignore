@@ -1,5 +1,6 @@
 /venv/
-/.idea/
-/.spyproject/
 *.pyc
 *.log
+/.idea/
+/.spyproject/
+users.pickle

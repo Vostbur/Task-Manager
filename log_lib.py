@@ -1,3 +1,15 @@
+"""USAGE module log_lib.py:
+create your_app.py with:
+
+    import log_lib
+    app_logger = log_lib.get_logger('filename.log')
+    app_logger.debug('Start logging...')
+
+Change logging level from command line args:
+
+    python your_app.py info
+"""
+
 import sys
 import logging
 import logging.handlers
