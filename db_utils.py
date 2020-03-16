@@ -1,20 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Test:
-sqlite3 db.db "select name from sqlite_master where type='table'"
-sqlite3 db.db "select * from task"
-
-for PEP8 check use: python -m pycodestyle db_utils.py
-"""
-
 import os
 import sqlite3
 from collections import namedtuple
-import log_lib
-
-
-# Настройка логгирования
-app_logger = log_lib.get_logger('db.log')
 
 
 class DataBase:
@@ -68,13 +54,11 @@ class DataBase:
         with self.conn:
             self.conn.execute("update task set status=? where id=?;",
                               (status, task_id))
-        app_logger.debug(f'Update status task - {task_id}')
 
     def delete_task(self, task_id):
         """Delete task """
         with self.conn:
             self.conn.execute("delete from task where id=?;", (task_id,))
-        app_logger.debug(f'Delete task - {task_id}')
 
     def delete_tasks_in_project(self, project_id):
         """Filter and delete task """
