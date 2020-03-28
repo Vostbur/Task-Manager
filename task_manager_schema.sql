@@ -15,11 +15,3 @@ create table task (
     date    text,
     status  integer default 0
 );
-
--- Пользователи
---create table customer (
---    id          integer primary key not null,
---    username    text unique not NULL,
---    password    text not NULL,
---    active      integer
---)

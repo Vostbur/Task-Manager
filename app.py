@@ -1,4 +1,3 @@
-import sys
 import hashlib
 from datetime import datetime as dt
 
@@ -26,6 +25,9 @@ db.create_schema()
 
 # Настройка авторизации
 users_repository = UsersRepository()
+
+# Настройка логгирования
+logger.add("log.log", format="{time:YYYY-MM-DD at HH:mm:ss} | {level} | {message}", rotation="20 MB")
 
 
 @app.route('/')
@@ -113,7 +115,8 @@ def close_task(task_id):
         logger.info('Пользователь "{}" отметил задачу "{}" как "выполнено".'.format(current_user.username, task.name))
     else:
         db.set_task_status(task_id, 1)
-        logger.info('Пользователь "{}" отметил задачу "{}" как "не выполнено".'.format(current_user.username, task.name))
+        logger.info('Пользователь "{}" отметил задачу "{}" как "не выполнено".'.format(current_user.username,
+                                                                                       task.name))
 
     return redirect('/')
 
@@ -209,16 +212,11 @@ def page_not_found(e):
 
 # callback to reload the user object
 @login_manager.user_loader
-def load_user(userid):
-    return users_repository.get_user_by_id(userid)
+def load_user(user_id):
+    return users_repository.get_user_by_id(user_id)
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        print('For change logging level start with command line argument '
-              '[debug|info|warning|error|critical]')
-
-    logger.debug("Starting...")
     if DEBUG:
         app.run(host='127.0.0.1', debug=True)
     else:

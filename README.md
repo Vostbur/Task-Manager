@@ -1,5 +1,16 @@
+Task-Manager
+============
+Система управления проектами для командной работы на Flask.
+
+    In app.py:
+    'DEBUG = True' for local test running on http://127.0.0.1:5000/ 
+    'DEBUG = False' for running on http://0.0.0.0:5000/ 
+
+              
 Install systemd service
 =======================
+(on Raspberry Pi for example)
+----------------------------- 
 
 sudo nano /etc/systemd/system/Task-Manager.service
 

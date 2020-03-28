@@ -133,4 +133,5 @@ dmypy.json
 
 # My project settings
 *.log
+*.db
 users.pickle

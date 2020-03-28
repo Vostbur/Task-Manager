@@ -1,5 +1,4 @@
 import pickle
-import hashlib
 import os.path
 from flask_login import UserMixin
 
@@ -18,9 +17,6 @@ class User(UserMixin):
     def is_active(self):
         return self.active
 
-    # def get_auth_token(self):
-    #     return self.make_secure_token(self.username, key='secret_key')
-
 
 class UsersRepository:
 
@@ -35,7 +31,7 @@ class UsersRepository:
                 with open(pickle_filename, 'rb') as f:
                     self.users, self.users_id_dict = pickle.load(f)
             except (EOFError, pickle.UnpicklingError):
-                print('Cannot write into object')  # logging this
+                print('Cannot write into object')
 
     def save_user(self, user):
         self.users_id_dict.setdefault(user.id, user)
@@ -45,7 +41,7 @@ class UsersRepository:
             try:
                 pickle.dump((self.users, self.users_id_dict), f)
             except pickle.PicklingError:
-                print('Error while reading from object. Object is not picklable')  # logging this
+                print('Error while reading from object. Object is not picklable')
 
     def get_user(self, username):
         return self.users.get(username)

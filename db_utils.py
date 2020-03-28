@@ -63,7 +63,7 @@ class DataBase:
     def get_name_project_by_id(self, project_id):
         """Get task by ID """
         project_name = list(self.conn.execute("select name from project where id=?;",
-                                     (project_id,)))[0][0]
+                                              (project_id,)))[0][0]
         return project_name
 
     def delete_tasks_in_project(self, project_id):
