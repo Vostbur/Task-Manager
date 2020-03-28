@@ -11,7 +11,7 @@ import db_utils as d
 from loguru import logger
 from user_lib import User, UsersRepository
 
-DEBUG = False
+DEBUG = True
 
 # Настрока flask приложения
 app = Flask(__name__)
@@ -81,6 +81,7 @@ def add_task():
 
     if not found:
         db.add_project(project)
+        logger.info('Пользователь "{}" создал проект "{}".'.format(current_user.username, project))
         projects = db.get_projects()
 
     for proj in projects:
@@ -94,6 +95,7 @@ def add_task():
 
     date = dt.strftime(dt.now(), "%d.%m.%Y")
     db.add_task(project_id, task, date, status)
+    logger.info('Пользователь "{}" добавил задачу "{}".'.format(current_user.username, task))
     return redirect('/')
 
 
@@ -108,8 +110,10 @@ def close_task(task_id):
 
     if task.status:
         db.set_task_status(task_id, 0)
+        logger.info('Пользователь "{}" отметил задачу "{}" как "выполнено".'.format(current_user.username, task.name))
     else:
         db.set_task_status(task_id, 1)
+        logger.info('Пользователь "{}" отметил задачу "{}" как "не выполнено".'.format(current_user.username, task.name))
 
     return redirect('/')
 
@@ -124,6 +128,7 @@ def delete_task(task_id):
         return redirect('/')
 
     db.delete_task(task_id)
+    logger.info('Пользователь "{}" удалил задачу "{}".'.format(current_user.username, task.name))
     return redirect('/')
 
 
@@ -131,8 +136,10 @@ def delete_task(task_id):
 @login_required
 def clear_all(delete_id):
     """Delete project with tasks """
+    project = db.get_name_project_by_id(delete_id)
     db.delete_project(delete_id)
     db.delete_tasks_in_project(delete_id)
+    logger.info('Пользователь "{}" удалил проект "{}".'.format(current_user.username, project))
     return redirect('/')
 
 
@@ -140,7 +147,9 @@ def clear_all(delete_id):
 @login_required
 def remove_all(lists_id):
     """Delete all tasks in project """
+    project = db.get_name_project_by_id(lists_id)
     db.delete_tasks_in_project(lists_id)
+    logger.info('Пользователь "{}" удалил все задачи из проекта "{}".'.format(current_user.username, project))
     return redirect('/')
 
 
@@ -166,14 +175,16 @@ def login():
         registered_user = users_repository.get_user(username)
         if registered_user is not None \
                 and registered_user.password == password:
-            print('Logged in..')
             login_user(registered_user)
+            logger.info('Пользователь "{}" начал работу'.format(username))
     return redirect('/')
 
 
 @app.route('/logout', methods=['POST'])
 def logout():
+    out_user = current_user.username
     logout_user()
+    logger.info('Пользователь "{}" закончил работу'.format(out_user))
     return redirect('/')
 
 
@@ -186,6 +197,7 @@ def register():
     password = hashlib.sha512(request.form['password'].encode('utf-8')).hexdigest()
     new_user = User(username, password, users_repository.next_index())
     users_repository.save_user(new_user)
+    logger.info('Пользователь "{}" зарегистрирован'.format(username))
     return redirect('/')
 
 

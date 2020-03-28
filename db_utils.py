@@ -60,11 +60,16 @@ class DataBase:
         with self.conn:
             self.conn.execute("delete from task where id=?;", (task_id,))
 
+    def get_name_project_by_id(self, project_id):
+        """Get task by ID """
+        project_name = list(self.conn.execute("select name from project where id=?;",
+                                     (project_id,)))[0][0]
+        return project_name
+
     def delete_tasks_in_project(self, project_id):
         """Filter and delete task """
         with self.conn:
-            self.conn.execute("delete from task where project=?;",
-                              (project_id,))
+            self.conn.execute("delete from task where project=?;", (project_id,))
 
     def delete_project(self, project_id):
         """Delete project """
