@@ -13,5 +13,5 @@ create table task (
     project integer not null references project(id),
     name    text not NULL,
     date    text,
-    status  integer default 0
+    status  integer default 1
 );
