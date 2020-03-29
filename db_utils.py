@@ -5,99 +5,113 @@ from collections import namedtuple
 
 class DataBase:
     """Class for common database operation """
-    db_schema_filename = "task_manager_schema.sql"
+    db_schema_filename = 'task_manager_schema.sql'
 
     def __init__(self):
-        db_filename = "db.db"
+        db_filename = 'db.db'
         self.db_exists = os.path.exists(db_filename)
         self.conn = sqlite3.connect(db_filename,
                                     check_same_thread=False)
-        self.Project = namedtuple("Project", "project_id name active")
-        self.Task = namedtuple("Task", "task_id project name date status")
+        # self.cur = self.conn.cursor()
+        self.Project = namedtuple('Project', 'project_id name active')
+        self.Task = namedtuple('Task', 'task_id project name date status')
 
-    def write_data_to_table(self, query, data):
-        """Write data to table """
-        try:
-            self.conn.executemany(query, data)
-        except Exception as err:
-            print(err)
-            self.conn.rollback()
-            raise err
-        else:
-            self.conn.commit()
+    # def write_data_to_table(self, query, data):
+    #     """Write data to table """
+    #     try:
+    #         self.conn.executemany(query, data)
+    #     except Exception as err:
+    #         print(err)
+    #         self.conn.rollback()
+    #         raise err
+    #     else:
+    #         self.conn.commit()
 
     def get_projects(self):
-        """Get projects."""
+        """Get projects """
         projects = []
-        for row in self.conn.execute("select * from project"):
-            projects.append(self.Project(project_id=row[0], name=row[1],
-                                         active=row[2]))
+        for row in self.conn.execute('select * from project'):
+            # projects.append(self.Project(project_id=row[0], name=row[1],
+            #                              active=row[2]))
+            projects.append(self.Project(*row))
         return projects
 
     def get_tasks(self):
         """Get tasks """
         tasks = []
-        for row in self.conn.execute("select * from task"):
-            tasks.append(self.Task(task_id=row[0], project=row[1], name=row[2],
-                                   date=row[3], status=row[4]))
+        for row in self.conn.execute('select * from task'):
+            # tasks.append(self.Task(task_id=row[0], project=row[1], name=row[2],
+            #                        date=row[3], status=row[4]))
+            tasks.append(self.Task(*row))
         return tasks
 
     def get_task_by_id(self, task_id):
         """Get task by ID """
-        row = list(self.conn.execute("select * from task where id=?;",
-                                     (task_id,)))[0]
-        return self.Task(task_id=row[0], project=row[1], name=row[2],
-                         date=row[3], status=row[4])
+        row = list(self.conn.execute('select * from task where id = :id', {'id': task_id}))[0]
+        # return self.Task(task_id=row[0], project=row[1], name=row[2],
+        #                  date=row[3], status=row[4])
+        return self.Task(*row)
+
+    # def get_name_project_by_id(self, project_id):
+    #     """Get name project by ID """
+    #     project_name = list(self.conn.execute("select name from project where id=?;",
+    #                                           (project_id,)))[0][0]
+    #     return project_name
+
+    def get_project_by_id(self, project_id):
+        """Get project by ID """
+        row = list(self.conn.execute('select * from project where id=?', (project_id,)))[0]
+        # return self.Project(project_id=row[0], name=row[1], active=row[2])
+        return self.Project(*row)
 
     def set_task_status(self, task_id, status):
         """Set task status """
         with self.conn:
-            self.conn.execute("update task set status=? where id=?;",
+            self.conn.execute('update task set status=? where id=?',
                               (status, task_id))
 
-    def delete_task(self, task_id):
-        """Delete task """
-        with self.conn:
-            self.conn.execute("delete from task where id=?;", (task_id,))
+    # def delete_task(self, task_id):
+    #     """Delete task """
+    #     with self.conn:
+    #         self.conn.execute('delete from task where id=?', (task_id,))
+    #
+    # def delete_project(self, project_id):
+    #     """Delete project """
+    #     with self.conn:
+    #         self.conn.execute('delete from project where id=?', (project_id,))
 
-    def get_name_project_by_id(self, project_id):
-        """Get task by ID """
-        project_name = list(self.conn.execute("select name from project where id=?;",
-                                              (project_id,)))[0][0]
-        return project_name
-
-    def delete_tasks_in_project(self, project_id):
-        """Filter and delete task """
+    def delete_item(self, item, item_id):
         with self.conn:
-            self.conn.execute("delete from task where project=?;", (project_id,))
+            self.conn.execute('delete from {} where id = :id'.format(item),
+                              {'id': item_id})
 
-    def delete_project(self, project_id):
-        """Delete project """
-        with self.conn:
-            self.conn.execute("delete from project where id=?;", (project_id,))
+    # def delete_tasks_in_project(self, project_id):
+    #     """Filter and delete task """
+    #     with self.conn:
+    #         self.conn.execute('delete from task where project=?', (project_id,))
 
     def update_active_project(self, project_id, flag):
         """Update project """
         with self.conn:
-            self.conn.execute("update project set active=? where id=?;",
+            self.conn.execute('update project set active=? where id=?',
                               (flag, project_id))
 
     def add_project(self, project):
         """Add project """
         with self.conn:
-            self.conn.execute("insert into project (name) \
-                              values (?)", (project,))
+            self.conn.execute('insert into project (name) \
+                              values (?)', (project,))
 
     def add_task(self, project_id, task, date, status):
         """Add task """
         with self.conn:
-            self.conn.execute("insert into task (project, name, date, status) \
-                              values (?, ?, ?, ?)",
+            self.conn.execute('insert into task (project, name, date, status) \
+                              values (?, ?, ?, ?)',
                               (project_id, task, date, status))
 
     def create_schema(self):
         """Create schema """
         if self.db_exists:
             return
-        with self.conn, open(self.db_schema_filename) as fname:
-            self.conn.executescript(fname.read())
+        with self.conn, open(self.db_schema_filename) as schema:
+            self.conn.executescript(schema.read())

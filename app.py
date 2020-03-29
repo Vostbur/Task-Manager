@@ -130,29 +130,34 @@ def delete_task(task_id):
     if not task:
         return redirect('/')
 
-    db.delete_task(task_id)
+    # db.delete_task(task_id)
+    db.delete_item('task', task_id)
     logger.info('Пользователь "{}" удалил задачу "{}".'.format(current_user.username, task.name))
     return redirect('/')
 
 
-@app.route('/clear/<delete_id>')
+@app.route('/clear/<project_id>')
 @login_required
-def clear_all(delete_id):
+def clear_all(project_id):
     """Delete project with tasks """
-    project = db.get_name_project_by_id(delete_id)
-    db.delete_project(delete_id)
-    db.delete_tasks_in_project(delete_id)
-    logger.info('Пользователь "{}" удалил проект "{}".'.format(current_user.username, project))
+    project = db.get_project_by_id(project_id)
+    # db.delete_project(project_id)
+    db.delete_item('project', project_id)
+    # db.delete_tasks_in_project(project_id)
+    db.delete_item('task', project_id)
+    logger.info('Пользователь "{}" удалил проект "{}".'.format(current_user.username, project.name))
     return redirect('/')
 
 
-@app.route('/remove/<lists_id>')
+@app.route('/remove/<project_id>')
 @login_required
-def remove_all(lists_id):
+def remove_all(project_id):
     """Delete all tasks in project """
-    project = db.get_name_project_by_id(lists_id)
-    db.delete_tasks_in_project(lists_id)
-    logger.info('Пользователь "{}" удалил все задачи из проекта "{}".'.format(current_user.username, project))
+    project = db.get_project_by_id(project_id)
+    # project = db.get_name_project_by_id(project_id)
+    # db.delete_tasks_in_project(project_id)
+    db.delete_item('task', project_id)
+    logger.info('Пользователь "{}" удалил все задачи из проекта "{}".'.format(current_user.username, project.name))
     return redirect('/')
 
 
