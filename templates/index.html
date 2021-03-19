@@ -62,10 +62,13 @@
             <!-- Task input form -->
             <form id="remember" class="navbar-form navbar-left" role="search" action="/add" method="POST"
                   onsubmit="return user_validate()">
+                {% csrf_token %}
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon container-fluid">Проект</span>
-                        <input type="text" name="project" class="form-control" {% for project in projects %}{% if project.project_id == active %}value="{{ project.name }}"{% endif %}{% endfor %} placeholder="Название проекта">
+                        <input type="text" name="project" class="form-control"
+                               value="{{ project.name }}"
+                               placeholder="Название проекта">
                         <span class="input-group-addon container-fluid">Задача</span>
                         <input type="text" name="task" class="form-control" placeholder="Новая задача" required>
                         <span class="input-group-addon container-fluid">Статус</span>
@@ -87,31 +90,31 @@
             </form>
         </div><!-- jumbotron -->
 
-        {% if tasks %}
         <div class="tasks">
-            {% if projects %}
             <span id="taksNav" class="container">
                 <ul class="nav nav-tabs">
                     {% for tab in projects %}
-                    {% if tab.project_id == active %}
+                    {% if tab.id == project.id %}
                     <li role="presentation" class="active">
                     {% else %}
                     <li role="presentation">
                     {% endif %}
-                        <a href="/project/{{ tab.name }}">{{ tab.name }}</a>
+                        <a href="/project/{{ tab.id }}/">{{ tab.name }}</a>
                     </li>
                     {% endfor %}
                 </ul>
             </span>
-            {% endif %}
             <div id="taskPanel" class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">&nbsp;
                         <span class="navbar-right">
-                            <a href="/clear/{{ active }}" onclick="return user_validate()">
-                                <span class="glyphicon glyphicon-trash" aria-label="Remove All"></span>
-                            </a>
-                            <span class="spacer">&nbsp;</span>
+                            <form method="POST" action="delete/">
+                                {% csrf_token %}
+                                <button style="margin-top: -5px;" class="btn btn-link" type="submit" aria-label="Remove All">
+                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                </button>
+                            </form>
+                            <span class="spacer">&nbsp</span>
                         </span>
                     </h3>
                 </div>
@@ -132,40 +135,12 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for task in tasks %}
-                        {% if task.project == active %}
-                            {% if task.status %}
-                        <tr class="success">
-                            <td>{{ task.name }}</td>
-                            <td align="center">{{ task.date }}</td>
-                            {% else %}
-                        <tr class="active">
-                            <td><strike>{{ task.name }}</strike></td>
-                            <td align="center"><strike>{{ task.date }}</strike></td>
-                            {% endif %}
-                            <td align="center">
-                                <a href="/close/{{ task.task_id }}" onclick="return user_validate()">
-                                {% if task.status %}
-                                    <span class="glyphicon glyphicon-ok-circle" aria-label="Open"></span>
-                                {% else %}
-                                    <span class="glyphicon glyphicon-ok-sign" aria-label="Close"></span>
-                                {% endif %}
-                                </a>
-                            </td>
-                            <td>
-                                <a href="/delete/{{ task.task_id }}" onclick="return user_validate()">
-                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-                                </a>
-                            </td>
-                        </tr>
-                        {% endif %}
-                        {% endfor %}
+                            {% block project_detail %}{% endblock %}
                         </tbody>
                     </table>
                 </div><!-- panel body -->
             </div><!-- panel -->
         </div><!-- tasks -->
-        {% endif %}
     </div>
 {% endblock %}
 

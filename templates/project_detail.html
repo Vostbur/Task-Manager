@@ -1,0 +1,30 @@
+{% extends "index.html" %}
+
+{% block project_detail %}
+    {% for task in project.task_set.all %}
+        {% if task.status %}
+    <tr class="success">
+        <td>{{ task.name }}</td>
+        <td align="center">{{ task.date|date:"d.m.y" }}</td>
+        {% else %}
+    <tr class="active">
+        <td><strike>{{ task.name }}</strike></td>
+        <td align="center"><strike>{{ task.date|date:"d.m.y" }}</strike></td>
+        {% endif %}
+        <td align="center">
+            <a href="/close/{{ task.task_id }}" onclick="return user_validate()">
+            {% if task.status %}
+                <span class="glyphicon glyphicon-ok-circle" aria-label="Open"></span>
+            {% else %}
+                <span class="glyphicon glyphicon-ok-sign" aria-label="Close"></span>
+            {% endif %}
+            </a>
+        </td>
+        <td>
+            <a href="/delete/{{ task.task_id }}" onclick="return user_validate()">
+                <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+{% endblock %}
