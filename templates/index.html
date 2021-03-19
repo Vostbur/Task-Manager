@@ -18,7 +18,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">Меню <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/register">Регистрация пользователей</a></li>
+                            <li><a href="{% url 'signup' %}">Регистрация пользователей</a></li>
                             <li role="separator" class="divider"></li>
                             <li class="dropdown-header">Документация</li>
                             <li><a href="#">О программе</a></li>
@@ -26,27 +26,29 @@
                         </ul>
                     </li>
                 </ul>
-                {% if not user  %}
-                <form id="signin" class="navbar-form navbar-right" role="form" action="/login" method="POST">
+
+                {% if not user.is_authenticated  %}
+                <form id="signin" class="navbar-form navbar-right" role="form" action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                     <input id="username" type="text" class="form-control" name="username" value="" placeholder="Пользователь">
                 </div>
-
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                     <input id="password" type="password" class="form-control" name="password" value="" placeholder="Пароль">
                 </div>
-
-                <button type="submit" class="btn btn-primary">Войти</button>
+                <button type="submit" class="btn btn-primary" >Войти</button>
                 </form>
                 {% endif %}
-                {% if user  %}
-                <form id="signin" class="navbar-form navbar-right" role="form" action="/logout" method="POST">
+
+                {% if user.is_authenticated  %}
+                <form id="signin" class="navbar-form navbar-right" role="form" action="{% url 'logout' %}">
                     <button type="submit" class="btn btn-primary">Выйти</button>
                 </form>
-                <span class="navbar-brand navbar-right">Пользователь: {{ user }}</span>
+                <span class="navbar-brand navbar-right">Пользователь: {{ user.username }}</span>
                 {% endif %}
+
             </div><!--/.nav-collapse -->
         </div>
     </nav>
