@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block container %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">Удаление задачи</h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="alert alert-warning" role="alert">
+                Вы уверены, что хотите удалить задачу <strong>{{ task }}</strong> ?
+            </div>
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

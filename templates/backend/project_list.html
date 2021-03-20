@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block container %}
+
+<ul class="nav nav-tabs" role="tablist">
+    {% for project in projects %}
+    <li class="nav-item">
+        <a class="nav-link {% if project.id == projects.0.id %} active {% endif %}"
+           id="project{{ project.id }}-tab"
+           data-toggle="tab"
+           href="#project{{ project.id }}"
+           role="tab"
+           aria-controls="project{{ project.id }}"
+           aria-selected="false">
+            <span data-toggle="tooltip"
+                  title="{{ project.project_name }}">{{ project.project_name|truncatechars:15 }}</span></a>
+    </li>
+    {% endfor %}
+</ul>
+
+<div class="tab-content">
+    {% for project in projects %}
+    <div class="tab-pane fade {% if project.id == projects.0.id %} show active {% endif %}" id="project{{ project.id }}"
+         role="tabpanel"
+         aria-labelledby="project{{ project.id }}-tab">
+        <table class="table table-hover">
+            <tr>
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">Список задач</th>
+                    <th scope="col" class="text-right">
+                        <a href="{{ project.id }}/delete">
+                            <button class="btn btn-sm btn-dark">
+                                Удалить
+                            </button>
+                        </a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for task in project.task_set.all %}
+                <tr>
+                    <td>
+                        <span {% if task.is_done %} style="text-decoration: line-through;" {% endif %}>
+                            <a href="/task/{{ task.id }}/update">{{ task.task_name }}</a>
+                        </span>
+                    </td>
+                    <td class="text-right">
+                        <a href="/task/{{ task.id }}/delete">
+                            <button class="btn btn-sm btn-danger">
+                                Удалить
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+        </table>
+        <div class="card-header text-right">
+            <a href="/{{ project.id }}/update">
+                <button class="btn btn-sm btn-dark" style="margin-right: -5px;">
+                    Править
+                </button>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+
+
+
+
+

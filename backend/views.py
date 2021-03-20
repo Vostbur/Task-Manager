@@ -1,33 +1,47 @@
-from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import CreateView, ListView, DetailView
-from django.views.generic.edit import DeleteView
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 
-from .models import Project
+from .models import Project, Task
 
 
 class ProjectListView(ListView):
     model = Project
-    template_name = 'index.html'
     context_object_name = 'projects'
 
 
-class ProjectDetailView(DetailView):
+class ProjectCreateView(CreateView):
     model = Project
-    template_name = 'project_detail.html'
-    extra_context = {'projects': Project.objects.all()}
-    context_object_name = 'project'
+    fields = ('project_name',)
+    success_url = reverse_lazy('projects')
 
 
-class ProjectDelete(DeleteView):
+class ProjectUpdateView(UpdateView):
     model = Project
-    success_url = reverse_lazy('project-detail', kwargs={'pk': 1})
+    fields = ('project_name',)
+    template_name = 'backend/project_update_form.html'
+    success_url = reverse_lazy('projects')
 
-    def get(self, *args, **kwargs):
-        return self.post(*args, **kwargs)
+
+class ProjectDeleteView(DeleteView):
+    model = Project
+    success_url = reverse_lazy('projects')
 
 
-class SignUpView(CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('home')
-    template_name = 'register.html'
+class TaskCreateView(CreateView):
+    model = Task
+    fields = '__all__'
+    success_url = reverse_lazy('projects')
+
+
+class TaskUpdateView(UpdateView):
+    model = Task
+    fields = ('task_name', 'is_done',)
+    template_name = 'backend/task_update_form.html'
+    success_url = reverse_lazy('projects')
+
+
+class TaskDeleteView(DeleteView):
+    model = Task
+    success_url = reverse_lazy('projects')
+

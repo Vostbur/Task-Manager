@@ -1,10 +1,14 @@
 from django.urls import path
 
-from .views import SignUpView, ProjectListView, ProjectDetailView, ProjectDelete
+from . import views
 
 urlpatterns = [
-    path('', ProjectListView.as_view(), name='home'),
-    path('project/<int:pk>/', ProjectDetailView.as_view(), name='project-detail'),
-    path('project/<int:pk>/delete/', ProjectDelete.as_view(), name='project-delete'),
-    path('signup/', SignUpView.as_view(), name='signup'),
+    path('', views.ProjectListView.as_view(), name='projects'),
+    path('create', views.ProjectCreateView.as_view(), name='project-create'),
+    path('task/create', views.TaskCreateView.as_view(), name='task-create'),
+    path('<int:pk>/delete', views.ProjectDeleteView.as_view(), name='project-delete'),
+    path('<int:pk>/update', views.ProjectUpdateView.as_view(), name='project-update'),
+    path('task/<int:pk>/delete', views.TaskDeleteView.as_view(), name='task-delete'),
+    path('task/<int:pk>/update', views.TaskUpdateView.as_view(), name='task-update'),
+    # path('signup/', views.SignUpView.as_view(), name='signup'),
 ]

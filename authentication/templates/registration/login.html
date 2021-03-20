@@ -1,0 +1,35 @@
+{% extends "_base.html" %}
+{% block container %}
+
+<div class="container" style="max-width: 260px;">
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <form method="POST" role="form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <h2 style="margin-top: 2px; margin-bottom: 2px; text-align: center;">Вход</h2>
+                    </div>
+                    <div class="input-group" style="margin-top: 2px; margin-bottom: 20px;">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="username" type="text" class="form-control" name="username" value=""
+                               placeholder="Пользователь">
+                    </div>
+                    <div class="input-group" style="margin-top: 2px; margin-bottom: 20px;">
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="password" type="password" class="form-control" name="password" value=""
+                               placeholder="Пароль">
+                    </div>
+                    <div style="margin-top: 2px; margin-bottom: 10px; text-align: center;">
+                        <button type="submit" class="btn btn-primary btn-block">Войти</button>
+                    </div>
+                </form>
+                <a href="{% url 'signup' %}">
+                    <button class="btn btn-primary btn-block">Регистрация</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
