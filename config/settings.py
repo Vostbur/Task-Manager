@@ -17,15 +17,18 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # my apps
+    'backend.apps.BackendConfig',
+    'authentication.apps.AuthConfig',
+    # default apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # my apps
-    'backend.apps.BackendConfig',
-    'authentication.apps.AuthConfig'
+    # 3rd party
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -109,3 +112,5 @@ STATICFILES_DIRS = [
 
 LOGIN_REDIRECT_URL = 'projects'
 LOGOUT_REDIRECT_URL = 'login'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
