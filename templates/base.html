@@ -12,6 +12,10 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     {% endblock %}
     <link rel="stylesheet" href="{% static 'css/mycss.css' %}">
+
+    {% if not user.is_authenticated %}
+        <meta http-equiv="REFRESH" content="0;url={% url 'login' %}">
+    {% endif %}
 </head>
 <body>
 
@@ -66,6 +70,7 @@
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
+
 </script>
 {% endblock %}
 </body>
