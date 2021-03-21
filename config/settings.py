@@ -19,7 +19,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # my apps
     'backend.apps.BackendConfig',
-    'authentication.apps.AuthConfig',
+    'accounts.apps.AccountsConfig',
     # default apps
     'django.contrib.admin',
     'django.contrib.auth',

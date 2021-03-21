@@ -1,8 +1,11 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 
 class Project(models.Model):
     project_name = models.CharField(max_length=150, default='', verbose_name='Проект')
+    user = models.ForeignKey(get_user_model(), null=True,
+                             on_delete=models.CASCADE, verbose_name='Пользователь')
 
     class Meta:
         verbose_name = 'Проект'

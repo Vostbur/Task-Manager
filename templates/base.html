@@ -13,55 +13,60 @@
     {% endblock %}
     <link rel="stylesheet" href="{% static 'css/mycss.css' %}">
 
-    {% if not user.is_authenticated %}
-    <meta http-equiv="REFRESH" content="0;url={% url 'login' %}">
-    {% endif %}
+    <!--    if not use LoginRequiredMixin -->
+    <!--    {% if not user.is_authenticated %}-->
+    <!--    <meta http-equiv="REFRESH" content="0;url={% url 'login' %}">-->
+    <!--    {% endif %}-->
 </head>
 <body>
 
 {% block navbar %}
 <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'projects' %}">Добавить:</a>
+        <a class="navbar-brand" href="{% url 'projects' %}">Менеджер задач</a>
+
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'project-create' %}">Проект</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'task-create' %}">Задачу</a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">
+                    Добавить
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+                    <a class="dropdown-item" href="{% url 'project-create' %}">Проект</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'task-create' %}">Задачу</a>
+                </div>
+            </li>
+        </ul>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            {% if user.is_authenticated %}
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+                        <a class="dropdown-item" href="{% url 'password_change' %}">Сменить пароль</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Выйти</a>
+                    </div>
                 </li>
             </ul>
-
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                {% if user.is_authenticated %}
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown"
-                           aria-haspopup="true" aria-expanded="false">
-                            {{ user.username }}
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
-                            <a class="dropdown-item" href="{% url 'password_change' %}">Сменить пароль</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{% url 'logout' %}">Выйти</a>
-                        </div>
-                    </li>
-                </ul>
-                {% else %}
-                <form class="form-inline ml-auto">
-                    <a href="{% url 'login' %}" class="btn btn-outline-secondary">Войти</a>
-                    <a href="{% url 'signup' %}" class="btn btn-primary ml-2">Регистрация</a>
-                </form>
-                {% endif %}
-            </div>
-
+            {% else %}
+            <form class="form-inline ml-auto">
+                <a href="{% url 'login' %}" class="btn btn-outline-secondary">Войти</a>
+                <a href="{% url 'signup' %}" class="btn btn-primary ml-2">Регистрация</a>
+            </form>
+            {% endif %}
         </div>
+
     </div>
 </nav>
 {% endblock %}
@@ -83,14 +88,9 @@
 
 {% block custom_js %}
 <script>
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
-
-
-
-
-
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
 {% endblock %}
 </body>
