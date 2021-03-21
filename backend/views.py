@@ -17,6 +17,10 @@ class ProjectCreateView(LoginRequiredMixin, ProjectMixin, CreateView):
     fields = ('project_name',)
     success_url = reverse_lazy('projects')
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 
 class ProjectUpdateView(LoginRequiredMixin, ProjectMixin, UpdateView):
     model = Project
@@ -34,6 +38,14 @@ class TaskCreateView(LoginRequiredMixin, TaskMixin, CreateView):
     model = Task
     fields = '__all__'
     success_url = reverse_lazy('projects')
+
+    def get_form(self, *args, **kwargs):
+        form_class = super().get_form(form_class=None)
+
+        form_class.fields['project'].choices =\
+            [(project.pk, project) for project in Project.objects.filter(user=self.request.user)]
+
+        return form_class
 
 
 class TaskUpdateView(LoginRequiredMixin, TaskMixin, UpdateView):
