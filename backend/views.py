@@ -4,47 +4,45 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from .models import Project, Task
+from .mixins import ProjectMixin, TaskMixin
 
 
-class ProjectListView(LoginRequiredMixin, ListView):
+class ProjectListView(LoginRequiredMixin, ProjectMixin, ListView):
     model = Project
     context_object_name = 'projects'
 
-    def get_queryset(self):
-        return Project.objects.filter(user=self.request.user)
 
-
-class ProjectCreateView(LoginRequiredMixin, CreateView):
+class ProjectCreateView(LoginRequiredMixin, ProjectMixin, CreateView):
     model = Project
     fields = ('project_name',)
     success_url = reverse_lazy('projects')
 
 
-class ProjectUpdateView(LoginRequiredMixin, UpdateView):
+class ProjectUpdateView(LoginRequiredMixin, ProjectMixin, UpdateView):
     model = Project
     fields = ('project_name',)
     template_name = 'backend/project_update_form.html'
     success_url = reverse_lazy('projects')
 
 
-class ProjectDeleteView(LoginRequiredMixin, DeleteView):
+class ProjectDeleteView(LoginRequiredMixin, ProjectMixin, DeleteView):
     model = Project
     success_url = reverse_lazy('projects')
 
 
-class TaskCreateView(LoginRequiredMixin, CreateView):
+class TaskCreateView(LoginRequiredMixin, TaskMixin, CreateView):
     model = Task
     fields = '__all__'
     success_url = reverse_lazy('projects')
 
 
-class TaskUpdateView(LoginRequiredMixin, UpdateView):
+class TaskUpdateView(LoginRequiredMixin, TaskMixin, UpdateView):
     model = Task
     fields = ('task_name', 'is_done',)
     template_name = 'backend/task_update_form.html'
     success_url = reverse_lazy('projects')
 
 
-class TaskDeleteView(LoginRequiredMixin, DeleteView):
+class TaskDeleteView(LoginRequiredMixin, TaskMixin, DeleteView):
     model = Task
     success_url = reverse_lazy('projects')
