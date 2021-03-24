@@ -9,8 +9,8 @@ django-crispy-forms = "*"
 psycopg2-binary = "*"
 gunicorn = "*"
 whitenoise = "*"
-dj-database-url = "*"
 environs = "*"
+dj-database-url = "*"
 
 [dev-packages]
 faker = "*"
