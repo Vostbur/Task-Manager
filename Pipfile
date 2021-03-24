@@ -10,6 +10,7 @@ psycopg2-binary = "*"
 gunicorn = "*"
 whitenoise = "*"
 dj-database-url = "*"
+environs = "*"
 
 [dev-packages]
 faker = "*"
