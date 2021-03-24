@@ -1,15 +1,16 @@
-version: "3.7"
+version: "3.8"
 
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn config.wsgi -b 0.0.0.0:8000
     volumes:
       - .:/usr/src/app/
     ports:
       - 8000:8000
-    env_file:
-      - ./.env.dev
+    environment:
+      - DEBUG=False
+      - DATABASE_URL=postgres://user_django:pass_django@db:5432/db_django
     depends_on:
       - db
   
@@ -18,8 +19,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=hello_django
-      - POSTGRES_PASSWORD=hello_django
-      - POSTGRES_DB=hello_django_dev
+      - POSTGRES_USER=user_django
+      - POSTGRES_PASSWORD=pass_django
+      - POSTGRES_DB=db_django
+
 volumes:
   postgres_data:

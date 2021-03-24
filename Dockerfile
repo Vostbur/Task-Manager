@@ -13,8 +13,4 @@ RUN pip install --upgrade pip
 COPY Pipfile Pipfile.lock ./
 RUN pip install pipenv && pipenv install --dev --deploy --system
 
-COPY ./entrypoint.sh .
-
 COPY . .
-
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
