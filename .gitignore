@@ -135,4 +135,3 @@ dmypy.json
 *.log
 *.db
 users.pickle
-/staticfiles/
