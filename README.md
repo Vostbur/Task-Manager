@@ -5,7 +5,7 @@ _Multi-user project/task tracker written with Django_
 
 ![](./example.png)
 
-##Start development environment in Docker container
+## Start development environment in Docker container
 
 ```
 docker-compose up -d --build
@@ -15,7 +15,7 @@ docker-compose exec web python manage.py fill_db
 docker-compose exec web python manage.py createsuperuser
 ```
 
-##Start production environment on Heroku in Docker container
+## Start production environment on Heroku in Docker container
 
 Dockerfile is suitable for running a production environment on Heroku using a docker container.
 [Link](https://devcenter.heroku.com/articles/getting-started-with-python?singlepage=true) to manual for getting started
