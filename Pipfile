@@ -11,6 +11,7 @@ gunicorn = "*"
 whitenoise = "*"
 environs = "*"
 dj-database-url = "*"
+djangorestframework = "*"
 
 [dev-packages]
 faker = "*"
