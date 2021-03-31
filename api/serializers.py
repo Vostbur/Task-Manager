@@ -6,7 +6,7 @@ from backend.models import Project, Task
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = '__all__'
+        fields = ['project_name']
 
 
 class TaskSerializer(serializers.ModelSerializer):
