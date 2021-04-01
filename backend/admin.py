@@ -4,7 +4,7 @@ from .models import Project, Task
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('task_name', 'is_done')
+    list_display = ('task_name', 'project', 'is_done')
 
 
 class TaskInLine(admin.TabularInline):
@@ -12,6 +12,8 @@ class TaskInLine(admin.TabularInline):
 
 
 class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('id', 'project_name', 'user')
+    ordering = ['id']
     inlines = [TaskInLine, ]
 
 
