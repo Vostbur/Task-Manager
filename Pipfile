@@ -12,10 +12,13 @@ whitenoise = "*"
 environs = "*"
 dj-database-url = "*"
 djangorestframework = "*"
+django-rest-auth = "*"
+django-allauth = "*"
 
 [dev-packages]
 faker = "*"
 autopep8 = "*"
+ipython = "*"
 
 [requires]
 python_version = "3.9"

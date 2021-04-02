@@ -6,10 +6,15 @@ from backend.models import Project, Task
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['project_name']
+        fields = ['id', 'project_name']
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        user = kwargs['context']['request'].user
+        super().__init__(*args, **kwargs)
+        self.fields['project'].queryset = Project.objects.filter(user=user)
+
     class Meta:
         model = Task
-        fields = ['task_name', 'is_done', 'project']
+        fields = ['id', 'task_name', 'is_done', 'project']
