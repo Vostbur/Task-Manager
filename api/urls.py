@@ -15,8 +15,10 @@ urlpatterns = [
     # path('tasks/', TaskListAPI.as_view(), name='task-list-api'),
     # path('tasks/<int:pk>/', TaskDetailAPI.as_view(), name='task-detail-api'),
     path('api-auth/', include('rest_framework.urls')),
-    path('rest-auth/', include('rest_auth.urls')),
-    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    # path('rest-auth/', include('rest_auth.urls')),
+    path('', include('rest_auth.urls')),
+    path('register/', include('rest_auth.registration.urls')),
+    # path('rest-auth/registration/', include('rest_auth.registration.urls')),
 ]
 
 urlpatterns += router.urls
